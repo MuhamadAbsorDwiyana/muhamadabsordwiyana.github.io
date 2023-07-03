@@ -22,8 +22,10 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
 
           if (authenticated) {
               document.getElementById("message").innerHTML = "Login successful!";
+              alert("Anda Berhasil");
           } else {
               document.getElementById("message").innerHTML = "Invalid username or password.";
+              alert("Anda gagal");
           }
       })
       .catch(function(error) {
