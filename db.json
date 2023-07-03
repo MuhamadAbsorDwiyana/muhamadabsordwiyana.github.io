@@ -1,0 +1,11 @@
+{
+    "status": "success",
+    "message": "Login berhasil",
+    "user": {
+      "id": 1,
+      "username": "absor",
+      "name": "John absor",
+      "password": "absor"
+    }
+  }
+  
