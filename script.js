@@ -11,7 +11,7 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     };
   
     // Kirim permintaan POST ke API JSON
-    fetch("https://example.com/api/login", {
+    fetch("https://my-json-server.typicode.com/muhamadabsordwiyana/muhamadabsordwiyana.github.io", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
