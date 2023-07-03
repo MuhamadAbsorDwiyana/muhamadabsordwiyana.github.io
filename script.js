@@ -5,7 +5,7 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
   var password = document.getElementById("password").value;
 
   // Simulate fetching the JSON data from a server
-  fetch("db.json")
+  fetch("https://my-json-server.typicode.com/muhamadabsordwiyana/muhamadabsordwiyana.github.io/db")
       .then(function(response) {
           return response.json();
       })
