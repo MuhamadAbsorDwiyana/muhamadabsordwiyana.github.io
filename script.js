@@ -1,36 +1,39 @@
-fetch('data_mahasiswa.json')
-  .then(response => response.json())
-  .then(data => {
-    let mahasiswa = data.mahasiswa;
-    let tableBody = document.getElementById('mahasiswa-body');
-
-    // Fungsi untuk menampilkan data mahasiswa dalam tabel
-    function tampilkanMahasiswa() {
-      tableBody.innerHTML = ''; // Menghapus konten tabel sebelum menambahkan data baru
-
-      mahasiswa.forEach(mhs => {
-        let row = document.createElement('tr');
-        let namaCell = document.createElement('td');
-        let kelasCell = document.createElement('td');
-        let ipkCell = document.createElement('td');
-
-        namaCell.textContent = mhs.nama;
-        kelasCell.textContent = mhs.kelas;
-        ipkCell.textContent = mhs.ipk;
-
-        row.appendChild(namaCell);
-        row.appendChild(kelasCell);
-        row.appendChild(ipkCell);
-
-        tableBody.appendChild(row);
-      });
-    }
-
-    // Mengonversi data JSON ke dalam format string sebelum menampilkan
-    data = JSON.stringify(data);
-    data = JSON.parse(data);
-
-    mahasiswa = data.mahasiswa;
-    tampilkanMahasiswa();
-  })
-  .catch(error => console.error(error));
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+    
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+  
+    // Buat objek data yang akan dikirim ke API
+    var data = {
+      username: username,
+      password: password
+    };
+  
+    // Kirim permintaan POST ke API JSON
+    fetch("https://example.com/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Error: " + response.status);
+      }
+    })
+    .then(function(data) {
+      // Tanggapan JSON dari API
+      console.log(data);
+      document.getElementById("message").textContent = "Login berhasil!";
+    })
+    .catch(function(error) {
+      // Tanggapan jika terjadi kesalahan
+      console.log(error);
+      document.getElementById("message").textContent = "Login gagal!";
+    });
+  });
+  
