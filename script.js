@@ -1,39 +1,32 @@
 document.getElementById("loginForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-    
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-  
-    // Buat objek data yang akan dikirim ke API
-    var data = {
-      username: username,
-      password: password
-    };
-  
-    // Kirim permintaan POST ke API JSON
-    fetch("https://my-json-server.typicode.com/muhamadabsordwiyana/muhamadabsordwiyana.github.io/userAbsor", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Error: " + response.status);
-      }
-    })
-    .then(function(data) {
-      // Tanggapan JSON dari API
-      console.log(data);
-      document.getElementById("message").textContent = "Login berhasil!";
-    })
-    .catch(function(error) {
-      // Tanggapan jika terjadi kesalahan
-      console.log(error);
-      document.getElementById("message").textContent = "Login gagal!";
-    });
-  });
-  
+  event.preventDefault();
+
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
+
+  // Simulate fetching the JSON data from a server
+  fetch("db.json")
+      .then(function(response) {
+          return response.json();
+      })
+      .then(function(data) {
+          var users = data.userAbsor;
+          var authenticated = false;
+
+          for (var i = 0; i < users.length; i++) {
+              if (users[i].username === username && users[i].password === password) {
+                  authenticated = true;
+                  break;
+              }
+          }
+
+          if (authenticated) {
+              document.getElementById("message").innerHTML = "Login successful!";
+          } else {
+              document.getElementById("message").innerHTML = "Invalid username or password.";
+          }
+      })
+      .catch(function(error) {
+          console.log(error);
+      });
+});
