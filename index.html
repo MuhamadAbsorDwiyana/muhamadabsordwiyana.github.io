@@ -1,16 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Login</title>
-    <script src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <title>Inventory Management</title>
 </head>
+
 <body>
-    <h2>Login</h2>
-    <form id="loginForm">
-        <input type="text" placeholder="Username" id="username" required><br>
-        <input type="password" placeholder="Password" id="password" required><br>
-        <input type="submit" value="Login">
-    </form>
-    <p id="message"></p>
+  <div class="container">
+    <h1>Inventory Management</h1>
+
+    <h2>Form Input Item</h2>
+    <form>
+      <div class="mb-3">
+        <label for="item-name" class="form-label">Item Name:</label>
+        <input type="text" id="item-name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="item-stock" class="form-label">Item Stock:</label>
+        <input type="number" id="item-stock" class="form-control" required>
+      </div>
+      <button type="submit" id="input-item" class="btn btn-primary">Input Item</button>
+    </form><br>
+
+    <h2>Form Delete Item</h2>
+    <form>
+      <div class="mb-3">
+        <label for="delete-item-name" class="form-label">Item Name:</label>
+        <input type="text" id="delete-item-name" class="form-control" required>
+      </div>
+      <button type="submit" id="delete-item" class="btn btn-danger">Delete Item</button>
+    </form><br>
+
+    <h2>Table Stocks Item</h2>
+    <table class="table table-striped" id="stocks-table">
+        <tr>
+          <th>Item Name</th>
+          <th>Remaining Stocks</th>
+          <th>Add 1 Stock</th>
+          <th>Reduce 1 Stock</th>
+        </tr>
+    </table>
+  </div>
+  <script src="bootstrap.min.js"></script>
+  
+<script>
+  // Check if local storage is supported
+  if (typeof(Storage) !== "undefined") {
+    // Retrieve items from local storage
+    let items = localStorage.getItem("items");
+    if (items) {
+      items = JSON.parse(items);
+      for (let i = 0; i < items.length; i++) {
+        addToStocksTable(items[i].name, items[i].stock);
+      }
+    }
+  } else {
+    alert("Local storage is not supported by your browser.");
+  }
+
+  // Function to add an item to the stocks table
+  function addToStocksTable(name, stock) {
+    let table = document.getElementById("stocks-table");
+    let row = table.insertRow(-1);
+    let itemNameCell = row.insertCell(0);
+    let stockCell = row.insertCell(1);
+    let addStockCell = row.insertCell(2);
+    let reduceStockCell = row.insertCell(3);
+
+    itemNameCell.innerHTML = name;
+    stockCell.innerHTML = stock;
+    addStockCell.innerHTML = '<button onclick="addStock(\'' + name + '\')" class="btn btn-success">+</button>';
+    reduceStockCell.innerHTML = '<button onclick="reduceStock(\'' + name + '\')" class="btn btn-danger">-</button>';
+  }
+
+  // Function to update local storage with the current items
+  function updateLocalStorage(items) {
+    localStorage.setItem("items", JSON.stringify(items));
+  }
+
+  // Event listener for input item button
+  document.getElementById("input-item").addEventListener("click", function() {
+    let itemName = document.getElementById("item-name").value;
+    let itemStock = document.getElementById("item-stock").value;
+
+    // Check if item already exists
+    let items = localStorage.getItem("items");
+    if (items) {
+      items = JSON.parse(items);
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].name === itemName) {
+          alert("Item already exists.");
+          return;
+        }
+      }
+    } else {
+      items = [];
+    }
+
+    // Add item to local storage and stocks table
+    let newItem = {
+      name: itemName,
+      stock: itemStock
+    };
+    items.push(newItem);
+    updateLocalStorage(items);
+    addToStocksTable(newItem.name, newItem.stock);
+
+    // Clear input fields
+    document.getElementById("item-name").value = "";
+    document.getElementById("item-stock").value = "";
+  });
+
+  // Event listener for delete item button
+  document.getElementById("delete-item").addEventListener("click", function() {
+    let deleteItemName = document.getElementById("delete-item-name").value;
+
+    // Check if item exists
+    let items = localStorage.getItem("items");
+    if (items) {
+      items = JSON.parse(items);
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].name === deleteItemName) {
+          // Remove item from local storage and stocks table
+          items.splice(i, 1);
+          updateLocalStorage(items);
+          let table = document.getElementById("stocks-table");
+          table.deleteRow(i + 1);
+
+          // Clear input field
+          document.getElementById("delete-item-name").value = "";
+          return;
+        }
+      }
+    }
+
+    alert("Item does not exist.");
+  });
+
+  // Function to add 1 stock to an item
+  function addStock(itemName) {
+    let items = localStorage.getItem("items");
+    if (items) {
+      items = JSON.parse(items);
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].name === itemName) {
+          // Update stock in local storage and stocks table
+          items[i].stock++;
+          updateLocalStorage(items);
+          let table = document.getElementById("stocks-table");
+          let stockCell = table.rows[i + 1].cells[1];
+          stockCell.innerHTML = items[i].stock;
+          return;
+        }
+      }
+    }
+  }
+
+  // Function to reduce 1 stock from an item
+  function reduceStock(itemName) {
+    let items = localStorage.getItem("items");
+    if (items) {
+      items = JSON.parse(items);
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].name === itemName) {
+          // Check if stock is already 0
+          if (items[i].stock === 0) {
+            alert("Stock is already 0.");
+            return;
+          }
+
+          // Update stock in local storage and stocks table
+          items[i].stock--;
+          updateLocalStorage(items);
+          let table = document.getElementById("stocks-table");
+          let stockCell = table.rows[i + 1].cells[1];
+          stockCell.innerHTML = items[i].stock;
+          return;
+        }
+      }
+    }
+  }
+</script>
+
 </body>
 </html>
