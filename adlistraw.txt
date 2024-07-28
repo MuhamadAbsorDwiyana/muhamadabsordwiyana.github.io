@@ -1,5 +1,11 @@
 # Adlist untuk Pi-hole
 
+# Untuk Testing
+https://facebook.com
+https://instagram.com
+https://detik.com
+https://e-learning.unpam.ac.id
+
 # Situs Web Pornografi
 https://pornhub.com
 https://8tube.xxx
